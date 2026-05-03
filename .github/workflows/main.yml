@@ -8,11 +8,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Dependencies
+        run: |
+          # Instalamos ldid para firmar y dpkg para empaquetar
+          brew install ldid dpkg
+
       - name: Setup Theos
         run: |
-          # Instalamos Theos manualmente para evitar fallos del script
           git clone --recursive https://github.com/theos/theos.git ~/theos
-          # Descargamos un SDK específico (iOS 16.5) para que no falle la API
           curl -LO https://github.com/theos/sdks/archive/master.zip
           unzip master.zip
           mv sdks-master/*.sdk ~/theos/sdks/
@@ -20,7 +23,8 @@ jobs:
 
       - name: Build Tweak
         run: |
-          # Compilamos especificando la arquitectura de iPhone
+          # Usamos la ruta absoluta de ldid instalada por brew
+          export PATH="/opt/homebrew/bin:$PATH"
           make package FINALPACKAGE=1 ARCHS="arm64 arm64e"
         
       - name: Upload Artifact
@@ -28,6 +32,6 @@ jobs:
         with:
           name: ResetGuest-Dylib-Final
           path: |
-            **/*.dylib
+            .theos/obj/*.dylib
             packages/*.deb
           if-no-files-found: error
