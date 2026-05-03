@@ -20,6 +20,10 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ResetGuest-Dylib
-          # Esta línea ahora busca en todas las carpetas hasta encontrar la .dylib
-          path: "**/*.dylib"
+          name: ResetGuest-Dylib-Final
+          # Esta configuración busca en TODAS las carpetas del servidor
+          path: |
+            **/*.dylib
+            **/obj/*.dylib
+            ./packages/*.deb
+          if-no-files-found: error
