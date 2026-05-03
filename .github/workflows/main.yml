@@ -21,4 +21,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ResetGuest-Dylib
-          path: .theos/obj/debug/ResetGuest.dylib
+          # Esta línea ahora busca en todas las carpetas hasta encontrar la .dylib
+          path: "**/*.dylib"
