@@ -10,20 +10,24 @@ jobs:
 
       - name: Setup Theos
         run: |
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          # Instalamos Theos manualmente para evitar fallos del script
+          git clone --recursive https://github.com/theos/theos.git ~/theos
+          # Descargamos un SDK específico (iOS 16.5) para que no falle la API
+          curl -LO https://github.com/theos/sdks/archive/master.zip
+          unzip master.zip
+          mv sdks-master/*.sdk ~/theos/sdks/
           echo "THEOS=~/theos" >> $GITHUB_ENV
 
       - name: Build Tweak
         run: |
-          make package FINALPACKAGE=1
+          # Compilamos especificando la arquitectura de iPhone
+          make package FINALPACKAGE=1 ARCHS="arm64 arm64e"
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ResetGuest-Dylib-Final
-          # Esta configuración busca en TODAS las carpetas del servidor
           path: |
             **/*.dylib
-            **/obj/*.dylib
-            ./packages/*.deb
+            packages/*.deb
           if-no-files-found: error
