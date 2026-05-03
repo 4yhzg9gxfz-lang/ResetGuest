@@ -1,0 +1,9 @@
+Package: com.asuritex.resetguest
+Name: ResetGuest
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Herramienta automatica para resetear cuenta de invitado en Free Fire.
+Maintainer: AsuriteX
+Author: AsuriteX
+Section: Tweaks
